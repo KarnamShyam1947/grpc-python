@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+message ServerStreamRequest {
+    int32 n = 1;
+}
+
+message TestRequest {
+    string msg = 1;
+}
+
+message TestResponse {
+    string reply = 1;
+}
+
+message FileUploadRequestStr {
+    string path = 1;
+}
+
+message FileUploadRequest {
+    bytes chunk = 1;
+}
+
+message FileUploadResponse {
+    int32 length = 1;
+    string time = 2;
+}
+
+message ClientStreamResponse {
+    int32 noOfRequest = 1;
+    repeated TestRequest requests = 2;
+}
+
+service TestService {
+    rpc UnaryRequest (TestRequest) returns (TestResponse);
+    rpc ServerStreaming (ServerStreamRequest) returns (stream TestResponse);
+    rpc ClientStreaming (stream TestRequest) returns (ClientStreamResponse);
+    rpc BiDirectionalRequest (stream TestRequest) returns (stream TestResponse);
+
+    rpc FileUpload (stream FileUploadRequest) returns (FileUploadResponse);
+    rpc FileUploadTest (FileUploadRequestStr) returns (FileUploadResponse);
+}
+
